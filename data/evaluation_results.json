@@ -1,12 +1,12 @@
 {
-  "timestamp": "2026-09-11T14:44:35Z",
+  "timestamp": "2026-09-11T14:50:44Z",
   "dataset_size": 200,
-  "dataset_source": "data/golden_eval_set.csv",
+  "dataset_source": "D:\\Hiver Assignment1\\data\\golden_eval_set.xlsx",
   "baseline1": {
     "mode": "baseline1",
     "sample_count": 200,
-    "total_eval_time_s": 0.3863147998927161,
-    "avg_latency_ms": 1.8205615016631782,
+    "total_eval_time_s": 0.3481285999296233,
+    "avg_latency_ms": 1.6557349998038262,
     "intent_metrics": {
       "intent_accuracy": 0.145,
       "intent_macro_precision": 0.020714285714285713,
@@ -5252,8 +5252,8 @@
   "baseline2": {
     "mode": "baseline2",
     "sample_count": 200,
-    "total_eval_time_s": 0.39108020009007305,
-    "avg_latency_ms": 1.8575704999966547,
+    "total_eval_time_s": 0.3215850000269711,
+    "avg_latency_ms": 1.5302509954199195,
     "intent_metrics": {
       "intent_accuracy": 0.395,
       "intent_macro_precision": 0.6489145658263306,
@@ -9827,8 +9827,8 @@
   "production": {
     "mode": "production",
     "sample_count": 200,
-    "total_eval_time_s": 0.39590050000697374,
-    "avg_latency_ms": 1.8717734958045185,
+    "total_eval_time_s": 0.30848749994765967,
+    "avg_latency_ms": 1.4692480023950338,
     "intent_metrics": {
       "intent_accuracy": 0.68,
       "intent_macro_precision": 0.7872052641873614,

@@ -1,16 +1,8 @@
-﻿## 0.How to run this program
-
-To run this project, first clone the GitHub repository to your local machine and open the project folder in VS Code or any preferred code editor. Make sure Python is installed, then create and activate a virtual environment and install all required dependencies using the commands provided in the `README.md` file. After completing the environment setup, follow the dataset setup instructions and configure any required environment variables or API keys. The complete project execution flow, including the commands for data preparation, running the AI support agent, evaluation, and reproducing the results, is documented step-by-step in `README.md`. The `redmi1.md` file contains the original assignment requirements and explains what tasks the project is designed to perform. Therefore, `README.md` should be followed for running the code, while `redmi1.md` can be referred to for understanding the assignment requirements and expected deliverables.
-
-
---- 
-
-
-# Hiver SDE Intern — AI Customer Support Agent
+﻿# Hiver SDE Intern — AI Customer Support Agent
 
 An end-to-end, production-grade AI Customer Support Agent built for **@AppleSupport** using real Twitter customer support conversations from Kaggle (`thoughtvector/customer-support-on-twitter`). The system classifies incoming inquiries into 7 operational domain intents, retrieves historically validated brand resolutions, synthesizes grounded and empathetic public replies (<280 characters), and executes policy-driven triage decisions to safely auto-handle or escalate inquiries with transparent stated reasons.
 
-The repository includes a 200-sample hand-labelled golden evaluation set, an automated evaluation harness comparing the system against two baselines, an LLM-as-a-judge rubric calibrated with human agreement metrics, an interactive CLI demo, and a complete technical report.
+The repository includes a 200-sample hand-labelled golden evaluation set (available in Excel `.xlsx`, `.csv`, and `.json`), an automated evaluation harness comparing the system against two baselines, an LLM-as-a-judge rubric calibrated with human agreement metrics, an interactive CLI demo, and a complete technical report.
 
 ---
 
@@ -86,22 +78,31 @@ The pipeline processes incoming customer messages through four decoupled stages:
 ```text
 Hiver Assignment1/
 ├── data/
-│   ├── calibration_study_set.json           # 50 double-blind samples across scores 1-5 for judge calibration
-│   ├── evaluation_results.json              # Saved benchmark metrics for all 3 models
-│   ├── golden_eval_set.json                 # 200 hand-labelled golden test examples
+│   ├── calibration_study_set.csv            # Calibration dataset in CSV spreadsheet format
+│   ├── calibration_study_set.json           # Calibration dataset in JSON format
+│   ├── calibration_study_set.xlsx           # Calibration dataset in Microsoft Excel format
+│   ├── evaluation_results.json              # Saved benchmark metrics for all 3 models (JSON)
+│   ├── evaluation_results.xlsx              # Multi-sheet Excel benchmark evaluation report
+│   ├── golden_eval_set.csv                  # 200 golden examples in CSV spreadsheet format
+│   ├── golden_eval_set.json                 # 200 golden examples in JSON format
+│   ├── golden_eval_set.xlsx                 # 200 golden examples in Microsoft Excel format
 │   ├── golden_eval_set_sampling_notes.md   # Sampling stratification and annotation methodology
 │   └── processed/
-│       ├── apple_support_corpus.json        # 1,500 cleaned historical @AppleSupport conversation pairs
-│       └── intent_taxonomy.json             # Taxonomy descriptions, keywords, and canonical examples
+│       ├── apple_support_corpus.csv         # 1,500 historical pairs in CSV format
+│       ├── apple_support_corpus.json        # 1,500 historical pairs in JSON format
+│       ├── apple_support_corpus.xlsx        # 1,500 historical pairs in Excel format
+│       ├── intent_taxonomy.json             # Taxonomy definitions, keywords, and canonical examples
+│       └── README.md                        # Detailed documentation for processed datasets
 ├── scripts/
 │   ├── download_data.py                     # Streaming script to curate pairs from Kaggle/HuggingFace
+│   ├── export_to_sheets.py                  # Utility to convert JSON datasets into Excel (.xlsx) and CSV
 │   ├── generate_taxonomy.py                 # Generates processed taxonomy configuration
 │   ├── interactive_demo.py                  # Terminal interactive CLI to chat with the agent live
 │   └── run_evaluation.py                    # Main evaluation benchmark runner (<1s runtime)
 ├── src/
 │   ├── __init__.py
 │   ├── config.py                            # Constants, paths, taxonomy definitions, and brand settings
-│   ├── data_loader.py                       # Text normalization, HTML unescaping, and tweet pair extractor
+│   ├── data_loader.py                       # Universal loader for Excel (.xlsx), CSV, and JSON
 │   ├── intent_classifier.py                 # Baseline 1, Baseline 2, and Production Hybrid classifiers
 │   ├── nlp_engine.py                        # Pure NumPy TF-IDF, Naive Bayes, and metrics calculator
 │   ├── pipeline.py                          # Unified orchestrator (SupportAgentPipeline)
@@ -133,24 +134,26 @@ Hiver Assignment1/
 * **Primary Dataset**: Customer Support on Twitter (`thoughtvector/customer-support-on-twitter` via Kaggle and Hugging Face mirror `SunidhiSriram/twcs`).
 * **Selected Brand**: **`@AppleSupport`** (~200k+ customer support interactions).
 
-### Included Data Assets
-To ensure headline numbers can be reproduced **offline in under 15 minutes** without downloading multi-gigabyte files or configuring external credentials, the repository comes pre-packaged with:
-1. **Curated Historical Support Corpus (`data/processed/apple_support_corpus.json`)**:
+### Included Data Assets (Excel, CSV, and JSON)
+To ensure headline numbers can be reproduced **offline in under 15 minutes** without downloading multi-gigabyte files or configuring external credentials, the repository comes pre-packaged with all datasets in **Microsoft Excel (`.xlsx`)**, **CSV (`.csv`)**, and **JSON (`.json`)**:
+
+1. **Curated Historical Support Corpus (`data/processed/apple_support_corpus.xlsx` / `.csv` / `.json`)**:
    - 1,500 cleaned customer inbound inquiries paired with real `@AppleSupport` resolutions.
    - Anonymized handles removed, HTML entities decoded (`&amp;` -> `&`), and single-turn tweet pairs structured.
-2. **Golden Evaluation Set (`data/golden_eval_set.json`)**:
-   - Exactly **200 hand-labelled test examples**.
+2. **Golden Evaluation Set (`data/golden_eval_set.xlsx` / `.csv` / `.json`)**:
+   - Exactly **200 hand-labelled test examples** in a formatted spreadsheet table.
    - 175 examples stratified equally across the 7 intents (25 per intent) + 25 adversarial edge-cases (multi-intent rants, sarcasm, public PII leaks, competitor churn threats, and policy boundaries).
    - Documented in detail in `data/golden_eval_set_sampling_notes.md`.
-3. **Calibration Study Set (`data/calibration_study_set.json`)**:
+3. **Calibration Study Set (`data/calibration_study_set.xlsx` / `.csv` / `.json`)**:
    - 50 double-blind samples with human quality scores ranging across 1.0, 2.0, 3.0, 4.0, and 5.0 to calibrate the automated judge with genuine score variance.
 
 ### (Optional) Streaming New Historical Data
 If you wish to re-stream or curate fresh conversation pairs directly from the source repository:
 ```bash
 python scripts/download_data.py
+python scripts/export_to_sheets.py
 ```
-*(Streams and parses 1,500 clean conversation pairs from Hugging Face in ~10 seconds).*
+*(Streams and parses 1,500 clean conversation pairs from Hugging Face in ~10 seconds and exports to Excel/CSV).*
 
 ---
 
@@ -163,7 +166,7 @@ python scripts/download_data.py
 ### Setup Instructions
 ```bash
 # 1. Clone the repository
-git clone https://github.com/aryan25-kotadiya/Hiver-Assignment1.git
+git clone https://github.com/<your-username>/Hiver-Assignment1.git
 cd "Hiver-Assignment1"
 
 # 2. Create and activate a virtual environment
@@ -241,7 +244,13 @@ Run the full evaluation benchmark comparing all 3 models on the 200-sample Golde
 ```bash
 python scripts/run_evaluation.py
 ```
-*Execution completes in **under 1 second** (~0.5s total runtime).*
+*Execution completes in **under 1 second** (~0.5s total runtime), loading from `data/golden_eval_set.xlsx` and exporting `data/evaluation_results.xlsx`.*
+
+### Using a Custom Excel or CSV Spreadsheet
+You can run the benchmark on **any custom Excel spreadsheet or CSV file**:
+```bash
+python scripts/run_evaluation.py --eval-file "path/to/custom_sheet.xlsx"
+```
 
 ### Actual Benchmark Comparison Output
 
@@ -325,6 +334,8 @@ In accordance with the assignment instructions, all core deliverables are compre
    - 12 non-obvious engineering and product decisions with detailed technical rationales.
 3. **Golden Evaluation Set Notes ([`data/golden_eval_set_sampling_notes.md`](data/golden_eval_set_sampling_notes.md))**:
    - Detailed documentation on the two-tier stratified sampling strategy, annotation guidelines, and class distribution.
+4. **Processed Corpus Documentation ([`data/processed/README.md`](data/processed/README.md))**:
+   - Schema and usage instructions for the 1,500-pair Apple Support corpus and intent taxonomy.
 
 ---
 
