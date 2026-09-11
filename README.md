@@ -155,7 +155,7 @@ python scripts/download_data.py
 ### Setup Instructions
 ```bash
 # 1. Clone the repository
-git clone https://github.com/<your-username>/Hiver-Assignment1.git
+git clone https://github.com/aryan25-kotadiya/Hiver-Assignment1.git
 cd "Hiver-Assignment1"
 
 # 2. Create and activate a virtual environment
