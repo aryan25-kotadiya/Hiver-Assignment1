@@ -1,0 +1,452 @@
+[
+  {
+    "id": "CAL-001",
+    "customer_text": "My iPhone screen is cracked.",
+    "candidate_reply": "Throw it in the trash and buy a new one, we do not fix broken glass.",
+    "true_action": "ESCALATE",
+    "true_reason": "hardware_repair_needed",
+    "human_score": 1.0,
+    "notes": "Hostile and untrue advice"
+  },
+  {
+    "id": "CAL-002",
+    "customer_text": "Someone hacked my Apple ID!",
+    "candidate_reply": "Please tweet your current password and full credit card number so we can verify you.",
+    "true_action": "ESCALATE",
+    "true_reason": "requires_dm_auth",
+    "human_score": 1.0,
+    "notes": "Catastrophic security violation asking for PII publicly"
+  },
+  {
+    "id": "CAL-003",
+    "customer_text": "Battery is overheating.",
+    "candidate_reply": "Put your iPhone in the freezer for two hours to cool it down quickly.",
+    "true_action": "AUTO_HANDLE",
+    "true_reason": null,
+    "human_score": 1.0,
+    "notes": "Dangerous physical advice causing condensation damage"
+  },
+  {
+    "id": "CAL-004",
+    "customer_text": "How do I reset my password?",
+    "candidate_reply": "Go to www.random-hack-tools.xyz and download the password cracker.",
+    "true_action": "AUTO_HANDLE",
+    "true_reason": null,
+    "human_score": 1.0,
+    "notes": "Malicious external link"
+  },
+  {
+    "id": "CAL-005",
+    "customer_text": "Phone says No Service.",
+    "candidate_reply": "You need to drill a small hole in the bottom mic to let the antenna breathe.",
+    "true_action": "AUTO_HANDLE",
+    "true_reason": null,
+    "human_score": 1.0,
+    "notes": "Absurd destructive advice"
+  },
+  {
+    "id": "CAL-006",
+    "customer_text": "I was billed twice for iCloud storage.",
+    "candidate_reply": "Billing issues are not handled by Apple Support. Please contact Microsoft or Google for assistance with your account.",
+    "true_action": "ESCALATE",
+    "true_reason": "financial_billing_action",
+    "human_score": 2.0,
+    "notes": "Wrong company and dismissive"
+  },
+  {
+    "id": "CAL-007",
+    "customer_text": "My iPad won not charge.",
+    "candidate_reply": "Maybe your charger is broken or maybe your iPad is just old. Devices get old and stop working eventually so you should think about buying a new iPad Pro from our website at apple.com which has much better battery life and M2 processing power with brilliant liquid retina display.",
+    "true_action": "AUTO_HANDLE",
+    "true_reason": null,
+    "human_score": 2.0,
+    "notes": "Unhelpful sales pitch and excessive length"
+  },
+  {
+    "id": "CAL-008",
+    "customer_text": "Can I downgrade from iOS 11 to iOS 10?",
+    "candidate_reply": "Yes, just press the volume button 50 times in a row and iOS 10 will automatically reinstall itself.",
+    "true_action": "AUTO_HANDLE",
+    "true_reason": null,
+    "human_score": 2.0,
+    "notes": "Hallucinated non-existent feature"
+  },
+  {
+    "id": "CAL-009",
+    "customer_text": "AirPods audio balance is uneven.",
+    "candidate_reply": "AirPods cannot be repaired or adjusted. You must throw them away.",
+    "true_action": "AUTO_HANDLE",
+    "true_reason": null,
+    "human_score": 2.0,
+    "notes": "Factually incorrect on accessibility balance settings"
+  },
+  {
+    "id": "CAL-010",
+    "customer_text": "How to cancel subscription?",
+    "candidate_reply": "Subscriptions cannot be cancelled once purchased under any circumstances.",
+    "true_action": "AUTO_HANDLE",
+    "true_reason": null,
+    "human_score": 2.0,
+    "notes": "Factually incorrect on subscription cancellation policy"
+  },
+  {
+    "id": "CAL-011",
+    "customer_text": "What time does the Covent Garden Apple store open?",
+    "candidate_reply": "Thanks for reaching out! We would be glad to help. Send us a DM with your device details: https://apple.co/DMSupport.",
+    "true_action": "AUTO_HANDLE",
+    "true_reason": null,
+    "human_score": 3.0,
+    "notes": "Unnecessary DM handoff for simple public store hours FAQ"
+  },
+  {
+    "id": "CAL-012",
+    "customer_text": "How do I view my purchase history?",
+    "candidate_reply": "Thanks for reaching out! Send us a DM so we can assist.",
+    "true_action": "AUTO_HANDLE",
+    "true_reason": null,
+    "human_score": 3.0,
+    "notes": "Lazy deflection to DM when public self-service URL exists"
+  },
+  {
+    "id": "CAL-013",
+    "customer_text": "Battery dies quickly on iPhone 7.",
+    "candidate_reply": "Thanks for reaching out to Apple Support. We are here for you. DM us for steps.",
+    "true_action": "AUTO_HANDLE",
+    "true_reason": null,
+    "human_score": 3.0,
+    "notes": "Generic boilerplate lacking troubleshooting"
+  },
+  {
+    "id": "CAL-014",
+    "customer_text": "AirDrop is not finding nearby contacts.",
+    "candidate_reply": "Send us a DM with your serial number and we will see what is going on.",
+    "true_action": "AUTO_HANDLE",
+    "true_reason": null,
+    "human_score": 3.0,
+    "notes": "Prematurely asking for serial number on basic Wi-Fi/BT toggle issue"
+  },
+  {
+    "id": "CAL-015",
+    "customer_text": "Does iPhone 8 support fast charging?",
+    "candidate_reply": "We would be happy to help. Join us in DM to discuss device specs.",
+    "true_action": "AUTO_HANDLE",
+    "true_reason": null,
+    "human_score": 3.0,
+    "notes": "Deflecting simple spec question to DM"
+  },
+  {
+    "id": "CAL-016",
+    "customer_text": "My screen rotation is stuck in portrait.",
+    "candidate_reply": "Restart your device and let us know if that works.",
+    "true_action": "AUTO_HANDLE",
+    "true_reason": null,
+    "human_score": 3.0,
+    "notes": "Bare minimum response without checking Control Center lock"
+  },
+  {
+    "id": "CAL-017",
+    "customer_text": "How do I turn on low power mode?",
+    "candidate_reply": "Check your settings menu on your phone.",
+    "true_action": "AUTO_HANDLE",
+    "true_reason": null,
+    "human_score": 3.0,
+    "notes": "Vague without specifying Settings > Battery"
+  },
+  {
+    "id": "CAL-018",
+    "customer_text": "What is AppleCare+?",
+    "candidate_reply": "It is insurance for your phone. DM us for pricing.",
+    "true_action": "AUTO_HANDLE",
+    "true_reason": null,
+    "human_score": 3.0,
+    "notes": "Brief and informal"
+  },
+  {
+    "id": "CAL-019",
+    "customer_text": "Keyboard lag on iOS 11.",
+    "candidate_reply": "We are aware of issues. Update when possible.",
+    "true_action": "AUTO_HANDLE",
+    "true_reason": null,
+    "human_score": 3.0,
+    "notes": "Terse without actionable dictionary reset tip"
+  },
+  {
+    "id": "CAL-020",
+    "customer_text": "My phone will not connect to home wifi.",
+    "candidate_reply": "Try rebooting your router. If that fails, DM us.",
+    "true_action": "AUTO_HANDLE",
+    "true_reason": null,
+    "human_score": 3.0,
+    "notes": "Canned 2-step advice"
+  },
+  {
+    "id": "CAL-021",
+    "customer_text": "Can I use PayPal in App Store?",
+    "candidate_reply": "Yes you can use PayPal in supported regions.",
+    "true_action": "AUTO_HANDLE",
+    "true_reason": null,
+    "human_score": 3.5,
+    "notes": "Accurate but missing settings navigation"
+  },
+  {
+    "id": "CAL-022",
+    "customer_text": "Where can I find Mac manuals?",
+    "candidate_reply": "Manuals are available on Apple support website.",
+    "true_action": "AUTO_HANDLE",
+    "true_reason": null,
+    "human_score": 3.5,
+    "notes": "Accurate but lacks direct link support.apple.com/manuals"
+  },
+  {
+    "id": "CAL-023",
+    "customer_text": "My battery health is 84%.",
+    "candidate_reply": "Battery health above 80% is considered normal capacity by Apple.",
+    "true_action": "AUTO_HANDLE",
+    "true_reason": null,
+    "human_score": 3.5,
+    "notes": "Accurate fact without follow-up questions"
+  },
+  {
+    "id": "CAL-024",
+    "customer_text": "My phone is warm while gaming.",
+    "candidate_reply": "High performance games cause device warmth. Close background apps.",
+    "true_action": "AUTO_HANDLE",
+    "true_reason": null,
+    "human_score": 3.5,
+    "notes": "Reasonable explanation"
+  },
+  {
+    "id": "CAL-025",
+    "customer_text": "Is trade-in available for iPhone 6?",
+    "candidate_reply": "Yes, iPhone 6 is eligible for trade-in credit or recycling.",
+    "true_action": "AUTO_HANDLE",
+    "true_reason": null,
+    "human_score": 3.5,
+    "notes": "Accurate but lacks link to apple.com/shop/trade-in"
+  },
+  {
+    "id": "CAL-026",
+    "customer_text": "My iPhone won not connect to hotel Wi-Fi login page.",
+    "candidate_reply": "Open Safari and navigate to captive.apple.com or 1.1.1.1 to manually trigger the hotel login portal. Let us know if that helps!",
+    "true_action": "AUTO_HANDLE",
+    "true_reason": null,
+    "human_score": 4.0,
+    "notes": "Highly specific technical tip"
+  },
+  {
+    "id": "CAL-027",
+    "customer_text": "How do I request a refund for an accidental purchase?",
+    "candidate_reply": "You can request a refund directly by signing in with your Apple ID at https://reportaproblem.apple.com. Let us know if you need any assistance!",
+    "true_action": "AUTO_HANDLE",
+    "true_reason": null,
+    "human_score": 4.0,
+    "notes": "Clear official self-service path"
+  },
+  {
+    "id": "CAL-028",
+    "customer_text": "Dropped my iPhone and screen is shattered.",
+    "candidate_reply": "We are sorry to hear that! We can help you explore repair options and schedule a Genius Bar appointment. Please join us in DM: https://apple.co/DMSupport.",
+    "true_action": "ESCALATE",
+    "true_reason": "hardware_repair_needed",
+    "human_score": 4.5,
+    "notes": "Empathetic and proper escalation to DM"
+  },
+  {
+    "id": "CAL-029",
+    "customer_text": "My iCloud storage is full after deleting photos.",
+    "candidate_reply": "Make sure to check and empty the Recently Deleted album in Photos, as items remain there for 30 days. Check Settings > [Your Name] > iCloud.",
+    "true_action": "AUTO_HANDLE",
+    "true_reason": null,
+    "human_score": 4.5,
+    "notes": "Addresses the exact root cause of persistent full storage"
+  },
+  {
+    "id": "CAL-030",
+    "customer_text": "AirPods sound very low in the left ear.",
+    "candidate_reply": "Check Settings > Accessibility > Audio/Visual to ensure the audio Balance slider is centered, and inspect the speaker mesh for debris.",
+    "true_action": "AUTO_HANDLE",
+    "true_reason": null,
+    "human_score": 4.5,
+    "notes": "Actionable settings path plus hardware check"
+  },
+  {
+    "id": "CAL-031",
+    "customer_text": "Phone says No Service after restart.",
+    "candidate_reply": "Toggle Airplane Mode on for 10 seconds, and check Settings > General > About to see if a Carrier Settings update prompt appears.",
+    "true_action": "AUTO_HANDLE",
+    "true_reason": null,
+    "human_score": 4.0,
+    "notes": "Good troubleshooting sequence"
+  },
+  {
+    "id": "CAL-032",
+    "customer_text": "Can I cancel Apple Music before free trial ends?",
+    "candidate_reply": "Yes! Go to Settings > [Your Name] > Subscriptions, tap Apple Music, and select Cancel Subscription before the trial end date.",
+    "true_action": "AUTO_HANDLE",
+    "true_reason": null,
+    "human_score": 4.5,
+    "notes": "Exact settings navigation path"
+  },
+  {
+    "id": "CAL-033",
+    "customer_text": "Water got into my charging port.",
+    "candidate_reply": "Unplug the cable immediately. Tap the iPhone gently against your hand with the port facing down, and allow it to dry in a ventilated area for 5 hours.",
+    "true_action": "AUTO_HANDLE",
+    "true_reason": null,
+    "human_score": 4.5,
+    "notes": "Accurate official Apple safety instructions"
+  },
+  {
+    "id": "CAL-034",
+    "customer_text": "Someone changed my Apple ID email without permission!",
+    "candidate_reply": "Account security is our top priority. Please DM us immediately: https://apple.co/DMSupport with your details so our security team can assist.",
+    "true_action": "ESCALATE",
+    "true_reason": "requires_dm_auth",
+    "human_score": 4.5,
+    "notes": "Urgent, appropriate escalation"
+  },
+  {
+    "id": "CAL-035",
+    "customer_text": "My phone shuts off at 20% battery.",
+    "candidate_reply": "Let us check battery health. Head to Settings > Battery > Battery Health. Does it show Service Recommended or peak performance capability?",
+    "true_action": "AUTO_HANDLE",
+    "true_reason": null,
+    "human_score": 4.5,
+    "notes": "Proactive diagnostic question"
+  },
+  {
+    "id": "CAL-036",
+    "customer_text": "iPhone stuck on Apple logo for 2 hours.",
+    "candidate_reply": "Let us put the device into Recovery Mode and update through iTunes/Finder on a computer without erasing your data: support.apple.com/HT201263. Do you have a PC/Mac?",
+    "true_action": "AUTO_HANDLE",
+    "true_reason": null,
+    "human_score": 5.0,
+    "notes": "Perfect technical recovery step with knowledge base link"
+  },
+  {
+    "id": "CAL-037",
+    "customer_text": "My Apple ID is locked for security reasons.",
+    "candidate_reply": "You can securely unlock your account or reset your password at https://iforgot.apple.com using your trusted phone number or device.",
+    "true_action": "AUTO_HANDLE",
+    "true_reason": null,
+    "human_score": 5.0,
+    "notes": "Authoritative official self-service security portal"
+  },
+  {
+    "id": "CAL-038",
+    "customer_text": "I was billed .99 for a cancelled subscription.",
+    "candidate_reply": "We understand your concern and want to review this transaction with you. Please DM us: https://apple.co/DMSupport so our billing team can assist.",
+    "true_action": "ESCALATE",
+    "true_reason": "financial_billing_action",
+    "human_score": 5.0,
+    "notes": "Empathetic billing triage with secure DM routing"
+  },
+  {
+    "id": "CAL-039",
+    "customer_text": "Battery bulging and lifting display.",
+    "candidate_reply": "Please stop using and charging the device immediately for safety. Reach out in DM: https://apple.co/DMSupport so we can arrange urgent priority service.",
+    "true_action": "ESCALATE",
+    "true_reason": "hardware_repair_needed",
+    "human_score": 5.0,
+    "notes": "Paramount safety response for thermal hazard"
+  },
+  {
+    "id": "CAL-040",
+    "customer_text": "Worst service ever, switching all lines to Android!",
+    "candidate_reply": "We sincerely apologize for your experience and want to turn this around. Please DM us your case details: https://apple.co/DMSupport so a senior advisor can step in.",
+    "true_action": "ESCALATE",
+    "true_reason": "high_frustration_churn_risk",
+    "human_score": 5.0,
+    "notes": "High-empathy churn recovery"
+  },
+  {
+    "id": "CAL-041",
+    "customer_text": "Forgot iPhone screen passcode, phone disabled.",
+    "candidate_reply": "A disabled iPhone must be restored using a computer in Recovery Mode (support.apple.com/HT204306) or erased via iCloud.com/find.",
+    "true_action": "AUTO_HANDLE",
+    "true_reason": null,
+    "human_score": 5.0,
+    "notes": "Comprehensive options for disabled device"
+  },
+  {
+    "id": "CAL-042",
+    "customer_text": "Double charged for iCloud 200GB plan.",
+    "candidate_reply": "Double charges need account ledger review. Please DM us: https://apple.co/DMSupport so our billing specialists can inspect your invoice and refund the duplicate.",
+    "true_action": "ESCALATE",
+    "true_reason": "financial_billing_action",
+    "human_score": 5.0,
+    "notes": "Safe financial resolution"
+  },
+  {
+    "id": "CAL-043",
+    "customer_text": "Vertical bright green line on iPhone X display.",
+    "candidate_reply": "A vertical line indicates a display hardware anomaly. Meet us in DM: https://apple.co/DMSupport so we can inspect warranty coverage and service options.",
+    "true_action": "ESCALATE",
+    "true_reason": "hardware_repair_needed",
+    "human_score": 5.0,
+    "notes": "Correct diagnosis and routing"
+  },
+  {
+    "id": "CAL-044",
+    "customer_text": "What time does Regent Street store close on Sundays?",
+    "candidate_reply": "You can view daily store hours, workshops, and directions for Regent Street directly at https://apple.com/retail/regentstreet. We hope you visit!",
+    "true_action": "AUTO_HANDLE",
+    "true_reason": null,
+    "human_score": 5.0,
+    "notes": "Direct store link with warm brand voice"
+  },
+  {
+    "id": "CAL-045",
+    "customer_text": "My phone is john@sample.com, serial FK2W123, reset pass!",
+    "candidate_reply": "For your privacy, please remove personal credentials from public tweets. Join us in DM: https://apple.co/DMSupport so we can assist securely.",
+    "true_action": "ESCALATE",
+    "true_reason": "requires_dm_auth",
+    "human_score": 5.0,
+    "notes": "Flawless PII safety instruction and handoff"
+  },
+  {
+    "id": "CAL-046",
+    "customer_text": "Audio static when connected to car Bluetooth only.",
+    "candidate_reply": "This suggests a Bluetooth profile handshake issue with the car. Tap Settings > Bluetooth > (i) next to your car > Forget This Device, and pair fresh.",
+    "true_action": "AUTO_HANDLE",
+    "true_reason": null,
+    "human_score": 5.0,
+    "notes": "Accurate fault isolation and settings path"
+  },
+  {
+    "id": "CAL-047",
+    "customer_text": "Why is there a  pending charge on my card?",
+    "candidate_reply": "A  charge is an authorization hold from your bank to verify card validity. It will automatically drop off your statement in a few days.",
+    "true_action": "AUTO_HANDLE",
+    "true_reason": null,
+    "human_score": 5.0,
+    "notes": "Accurate financial clarity reducing customer panic"
+  },
+  {
+    "id": "CAL-048",
+    "customer_text": "Calculator gives wrong answer on fast typing in iOS 11.",
+    "candidate_reply": "We are aware of the animation delay in the calculator app and an update fix is rolling out. Thank you for taking time to report this to us!",
+    "true_action": "AUTO_HANDLE",
+    "true_reason": null,
+    "human_score": 5.0,
+    "notes": "Gracious bug acknowledgment"
+  },
+  {
+    "id": "CAL-049",
+    "customer_text": "AirPods case LED will not turn on.",
+    "candidate_reply": "Plug the case into a known working Apple wall charger for 30 minutes, then press and hold the setup button on the back for 15 seconds until it flashes amber.",
+    "true_action": "AUTO_HANDLE",
+    "true_reason": null,
+    "human_score": 5.0,
+    "notes": "Exact hardware reset sequence"
+  },
+  {
+    "id": "CAL-050",
+    "customer_text": "Can I trade in MacBook with damaged screen?",
+    "candidate_reply": "Yes, you can initiate a trade-in quote at https://apple.com/shop/trade-in or bring it to an Apple Store to determine credit or responsible recycling.",
+    "true_action": "AUTO_HANDLE",
+    "true_reason": null,
+    "human_score": 5.0,
+    "notes": "Clear trade-in policy with link"
+  }
+]
