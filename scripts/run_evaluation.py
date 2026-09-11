@@ -1,12 +1,21 @@
 ﻿import sys
 import json
 import time
+import argparse
 from pathlib import Path
 from typing import Dict, List, Any
+import openpyxl
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
-from src.config import GOLDEN_SET_PATH, DATA_DIR
+from src.config import (
+    GOLDEN_SET_PATH,
+    GOLDEN_SET_XLSX_PATH,
+    CALIBRATION_PATH,
+    CALIBRATION_XLSX_PATH,
+    DATA_DIR
+)
+from src.data_loader import load_golden_set, load_sheet
 from src.pipeline import SupportAgentPipeline
 from src.evaluation.metrics import (
     compute_intent_metrics,
@@ -16,16 +25,14 @@ from src.evaluation.metrics import (
 from src.evaluation.llm_judge import LLMJudgeRubric
 from src.evaluation.agreement_study import compute_correlation_and_agreement
 
-CALIBRATION_PATH = DATA_DIR / "calibration_study_set.json"
-
 def run_model_benchmark(pipeline: SupportAgentPipeline, dataset: List[Dict[str, Any]], judge: LLMJudgeRubric) -> Dict[str, Any]:
     start_t = time.perf_counter()
 
-    customer_texts = [d["customer_text"] for d in dataset]
-    true_intents = [d["true_intent"] for d in dataset]
-    true_actions = [d["true_action"] for d in dataset]
+    customer_texts = [d.get("customer_text", "") for d in dataset]
+    true_intents = [d.get("true_intent", "general_other") for d in dataset]
+    true_actions = [d.get("true_action", "AUTO_HANDLE") for d in dataset]
     true_reasons = [d.get("true_escalation_reason") for d in dataset]
-    reference_replies = [d["reference_reply"] for d in dataset]
+    reference_replies = [d.get("reference_reply", "") for d in dataset]
 
     pred_intents = []
     pred_actions = []
@@ -34,7 +41,7 @@ def run_model_benchmark(pipeline: SupportAgentPipeline, dataset: List[Dict[str, 
     response_times = []
 
     for text in customer_texts:
-        resp = pipeline.process(text)
+        resp = pipeline.process(str(text))
         pred_intents.append(resp.predicted_intent)
         pred_actions.append(resp.action)
         pred_reasons.append(resp.escalation_reason)
@@ -56,25 +63,25 @@ def run_model_benchmark(pipeline: SupportAgentPipeline, dataset: List[Dict[str, 
     # 3. Identify Failure Cases
     failures = []
     for idx, (d, pi, pa, rep, jg) in enumerate(zip(dataset, pred_intents, pred_actions, candidate_replies, judge_results)):
-        is_intent_fail = (pi != d["true_intent"])
-        is_triage_fail = (pa != d["true_action"])
+        is_intent_fail = (pi != d.get("true_intent"))
+        is_triage_fail = (pa != d.get("true_action"))
         is_quality_fail = (jg["composite_score"] < 3.5)
 
         if is_intent_fail or is_triage_fail or is_quality_fail:
             failures.append({
-                "id": d["id"],
-                "customer_text": d["customer_text"],
-                "true_intent": d["true_intent"],
+                "id": d.get("id", f"EX-{idx+1:03d}"),
+                "customer_text": d.get("customer_text", ""),
+                "true_intent": d.get("true_intent"),
                 "pred_intent": pi,
-                "true_action": d["true_action"],
+                "true_action": d.get("true_action"),
                 "pred_action": pa,
                 "true_reason": d.get("true_escalation_reason"),
                 "candidate_reply": rep,
-                "reference_reply": d["reference_reply"],
+                "reference_reply": d.get("reference_reply", ""),
                 "judge_score": jg["composite_score"],
                 "failure_type": (
-                    "CRITICAL_SAFETY_MISS" if (d["true_action"] == "ESCALATE" and pa == "AUTO_HANDLE")
-                    else "FALSE_ESCALATION" if (d["true_action"] == "AUTO_HANDLE" and pa == "ESCALATE")
+                    "CRITICAL_SAFETY_MISS" if (d.get("true_action") == "ESCALATE" and pa == "AUTO_HANDLE")
+                    else "FALSE_ESCALATION" if (d.get("true_action") == "AUTO_HANDLE" and pa == "ESCALATE")
                     else "INTENT_MISCLASSIFICATION" if is_intent_fail
                     else "POOR_REPLY_QUALITY"
                 ),
@@ -94,23 +101,108 @@ def run_model_benchmark(pipeline: SupportAgentPipeline, dataset: List[Dict[str, 
         "mean_judge_score": mean_judge_score,
         "judge_scores": judge_composite_scores,
         "failure_count": len(failures),
-        "failures": failures
+        "failures": failures,
+        "predictions": [
+            {
+                "id": d.get("id", f"EX-{i+1:03d}"),
+                "customer_text": ct,
+                "true_intent": ti,
+                "pred_intent": pi,
+                "true_action": ta,
+                "pred_action": pa,
+                "pred_reason": pr,
+                "candidate_reply": rep,
+                "judge_score": js
+            }
+            for i, (d, ct, ti, pi, ta, pa, pr, rep, js) in enumerate(
+                zip(dataset, customer_texts, true_intents, pred_intents, true_actions, pred_actions, pred_reasons, candidate_replies, judge_composite_scores)
+            )
+        ]
     }
 
+def export_results_to_excel(results_payload: Dict[str, Any], excel_path: Path):
+    """
+    Exports benchmark results directly into a structured Excel spreadsheet (.xlsx).
+    """
+    wb = openpyxl.Workbook()
+
+    # Sheet 1: Summary Metrics
+    ws_metrics = wb.active
+    ws_metrics.title = "Comparison_Metrics"
+
+    b1 = results_payload["baseline1"]
+    b2 = results_payload["baseline2"]
+    prod = results_payload["production"]
+
+    headers = ["Metric", "Baseline 1 (Trivial)", "Baseline 2 (Simple)", "Proposed System (Candidate)"]
+    ws_metrics.append(headers)
+
+    metric_rows = [
+        ("Intent Accuracy", b1["intent_metrics"]["intent_accuracy"], b2["intent_metrics"]["intent_accuracy"], prod["intent_metrics"]["intent_accuracy"]),
+        ("Intent Macro-F1", b1["intent_metrics"]["intent_macro_f1"], b2["intent_metrics"]["intent_macro_f1"], prod["intent_metrics"]["intent_macro_f1"]),
+        ("Triage Accuracy", b1["triage_metrics"]["triage_accuracy"], b2["triage_metrics"]["triage_accuracy"], prod["triage_metrics"]["triage_accuracy"]),
+        ("Escalation F1", b1["triage_metrics"]["escalation_f1"], b2["triage_metrics"]["escalation_f1"], prod["triage_metrics"]["escalation_f1"]),
+        ("Critical Miss Rate (Safety)", b1["triage_metrics"]["critical_miss_rate"], b2["triage_metrics"]["critical_miss_rate"], prod["triage_metrics"]["critical_miss_rate"]),
+        ("False Escalation Rate", b1["triage_metrics"]["false_escalation_rate"], b2["triage_metrics"]["false_escalation_rate"], prod["triage_metrics"]["false_escalation_rate"]),
+        ("ROUGE-L Score", b1["reply_metrics"]["rouge_l"], b2["reply_metrics"]["rouge_l"], prod["reply_metrics"]["rouge_l"]),
+        ("Length Compliance (<280ch)", b1["reply_metrics"]["length_compliance_rate"], b2["reply_metrics"]["length_compliance_rate"], prod["reply_metrics"]["length_compliance_rate"]),
+        ("PII Safety Rate", b1["reply_metrics"]["pii_safety_rate"], b2["reply_metrics"]["pii_safety_rate"], prod["reply_metrics"]["pii_safety_rate"]),
+        ("LLM-Judge Score (1-5)", b1["mean_judge_score"], b2["mean_judge_score"], prod["mean_judge_score"]),
+        ("Avg Latency (ms)", b1["avg_latency_ms"], b2["avg_latency_ms"], prod["avg_latency_ms"]),
+        ("Total Eval Time (s)", b1["total_eval_time_s"], b2["total_eval_time_s"], prod["total_eval_time_s"]),
+    ]
+    for row in metric_rows:
+        ws_metrics.append(list(row))
+
+    # Sheet 2: Predictions
+    ws_preds = wb.create_sheet(title="Candidate_Predictions")
+    pred_headers = ["ID", "Customer Text", "True Intent", "Predicted Intent", "True Action", "Predicted Action", "Escalation Reason", "Drafted Reply", "Judge Score"]
+    ws_preds.append(pred_headers)
+    for p in prod["predictions"]:
+        ws_preds.append([
+            p["id"], p["customer_text"], p["true_intent"], p["pred_intent"],
+            p["true_action"], p["pred_action"], p["pred_reason"] or "", p["candidate_reply"], p["judge_score"]
+        ])
+
+    # Sheet 3: Failures
+    ws_fails = wb.create_sheet(title="Failure_Analysis")
+    fail_headers = ["ID", "Failure Type", "Customer Text", "True Intent", "Pred Intent", "True Action", "Pred Action", "Reason", "Drafted Reply", "Judge Score"]
+    ws_fails.append(fail_headers)
+    for f in prod["failures"]:
+        ws_fails.append([
+            f["id"], f["failure_type"], f["customer_text"], f["true_intent"],
+            f["pred_intent"], f["true_action"], f["pred_action"], f["true_reason"] or "", f["candidate_reply"], f["judge_score"]
+        ])
+
+    wb.save(excel_path)
+    print(f"[EXCEL REPORT] Benchmark results exported to Excel spreadsheet: {excel_path}")
+
 def main():
-    print("=" * 70)
+    parser = argparse.ArgumentParser(description="Evaluate Apple Support AI Agent on Excel (.xlsx), CSV, or JSON datasets.")
+    parser.add_argument(
+        "--eval-file", "-f",
+        type=str,
+        default=None,
+        help="Path to evaluation dataset Excel spreadsheet (.xlsx), CSV (.csv), or JSON (.json). Defaults to data/golden_eval_set.xlsx."
+    )
+    parser.add_argument(
+        "--export-excel",
+        action="store_true",
+        default=True,
+        help="Export full benchmark outputs into data/evaluation_results.xlsx."
+    )
+    args = parser.parse_args()
+
+    print("=" * 75)
     print(" HIVER SDE INTERN ASSIGNMENT: EVALUATION BENCHMARK")
-    print(" Target Brand: @AppleSupport | Evaluation Set: 200 Golden Examples")
-    print("=" * 70)
+    print(" Target Brand: @AppleSupport | Excel & Spreadsheet Evaluation Harness")
+    print("=" * 75)
 
-    if not GOLDEN_SET_PATH.exists():
-        print(f"Error: Golden evaluation set not found at {GOLDEN_SET_PATH}")
-        sys.exit(1)
-
-    with open(GOLDEN_SET_PATH, "r", encoding="utf-8") as f:
-        dataset = json.load(f)
-
-    print(f"Loaded {len(dataset)} hand-labelled golden test examples.")
+    # Load evaluation dataset from Excel spreadsheet or custom file
+    eval_file = args.eval_file or str(GOLDEN_SET_XLSX_PATH)
+    print(f"\n[DATASET] Loading evaluation dataset from: {eval_file}")
+    dataset = load_golden_set(eval_file)
+    print(f"[DATASET] Loaded {len(dataset)} examples successfully!")
 
     judge = LLMJudgeRubric()
 
@@ -129,18 +221,18 @@ def main():
     prod_pipe = SupportAgentPipeline(mode="production")
     prod_res = run_model_benchmark(prod_pipe, dataset, judge)
 
-    # 4. Human-Judge Agreement Calibration Study on the 50-sample calibration dataset
+    # 4. Human-Judge Agreement Calibration Study
     print("\n>>> Running Human vs Judge Agreement Study (50 double-blind samples across scores 1-5)...")
-    if CALIBRATION_PATH.exists():
-        with open(CALIBRATION_PATH, "r", encoding="utf-8") as f:
-            cal_data = json.load(f)
-        human_ratings = [c["human_score"] for c in cal_data]
+    cal_file = CALIBRATION_XLSX_PATH if CALIBRATION_XLSX_PATH.exists() else CALIBRATION_PATH
+    if cal_file.exists():
+        cal_data = load_sheet(cal_file)
+        human_ratings = [float(c.get("human_score", 5.0)) for c in cal_data]
         judge_scores_cal = []
         for item in cal_data:
             j_eval = judge.evaluate_reply(
-                customer_text=item["customer_text"],
-                candidate_reply=item["candidate_reply"],
-                true_action=item["true_action"],
+                customer_text=str(item.get("customer_text", "")),
+                candidate_reply=str(item.get("candidate_reply", "")),
+                true_action=str(item.get("true_action", "AUTO_HANDLE")),
                 reference_reply=""
             )
             judge_scores_cal.append(j_eval["composite_score"])
@@ -185,20 +277,26 @@ def main():
         print(f"    Drafted Reply: \"{fail['candidate_reply']}\"")
         print(f"    Judge Score  : {fail['judge_score']}/5.0")
 
-    # Save complete benchmark payload to disk
-    output_path = Path("data/evaluation_results.json")
+    # Save benchmark payload to JSON
+    json_output_path = Path("data/evaluation_results.json")
     results_payload = {
         "timestamp": time.strftime("%Y-%m-%dT%H:%M:%SZ"),
         "dataset_size": len(dataset),
+        "dataset_source": eval_file,
         "baseline1": b1_res,
         "baseline2": b2_res,
         "production": prod_res,
         "human_judge_agreement": agreement_res
     }
-    with open(output_path, "w", encoding="utf-8") as f:
+    with open(json_output_path, "w", encoding="utf-8") as f:
         json.dump(results_payload, f, indent=2)
 
-    print(f"\n[DONE] Full benchmark results exported to {output_path}")
+    # Export benchmark payload to Excel Spreadsheet (.xlsx)
+    if args.export_excel:
+        excel_output_path = Path("data/evaluation_results.xlsx")
+        export_results_to_excel(results_payload, excel_output_path)
+
+    print(f"\n[DONE] Full benchmark results exported to {json_output_path} and data/evaluation_results.xlsx")
 
 if __name__ == "__main__":
     main()

@@ -6,8 +6,23 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 DATA_DIR = BASE_DIR / "data"
 RAW_DATA_DIR = DATA_DIR / "raw"
 PROCESSED_DATA_DIR = DATA_DIR / "processed"
+
+# Corpus Paths (JSON, Excel, and CSV supported)
 CORPUS_PATH = PROCESSED_DATA_DIR / "apple_support_corpus.json"
+CORPUS_XLSX_PATH = PROCESSED_DATA_DIR / "apple_support_corpus.xlsx"
+CORPUS_CSV_PATH = PROCESSED_DATA_DIR / "apple_support_corpus.csv"
+
+# Golden Evaluation Set Paths
 GOLDEN_SET_PATH = DATA_DIR / "golden_eval_set.json"
+GOLDEN_SET_XLSX_PATH = DATA_DIR / "golden_eval_set.xlsx"
+GOLDEN_SET_CSV_PATH = DATA_DIR / "golden_eval_set.csv"
+
+# Calibration Study Set Paths
+CALIBRATION_PATH = DATA_DIR / "calibration_study_set.json"
+CALIBRATION_XLSX_PATH = DATA_DIR / "calibration_study_set.xlsx"
+CALIBRATION_CSV_PATH = DATA_DIR / "calibration_study_set.csv"
+
+# Taxonomy Path
 TAXONOMY_PATH = PROCESSED_DATA_DIR / "intent_taxonomy.json"
 
 # Defined Intent Taxonomy for @AppleSupport
