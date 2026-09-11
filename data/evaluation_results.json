@@ -1,11 +1,11 @@
 {
-  "timestamp": "2026-09-11T12:07:14Z",
+  "timestamp": "2026-09-11T14:05:48Z",
   "dataset_size": 200,
   "baseline1": {
     "mode": "baseline1",
     "sample_count": 200,
-    "total_eval_time_s": 0.2840347000164911,
-    "avg_latency_ms": 1.3356534950435162,
+    "total_eval_time_s": 0.4803964999737218,
+    "avg_latency_ms": 2.272498500533402,
     "intent_metrics": {
       "intent_accuracy": 0.145,
       "intent_macro_precision": 0.020714285714285713,
@@ -3049,8 +3049,8 @@
   "baseline2": {
     "mode": "baseline2",
     "sample_count": 200,
-    "total_eval_time_s": 0.26773429999593645,
-    "avg_latency_ms": 1.263191003818065,
+    "total_eval_time_s": 0.5141140000196174,
+    "avg_latency_ms": 2.4123834975762293,
     "intent_metrics": {
       "intent_accuracy": 0.395,
       "intent_macro_precision": 0.6489145658263306,
@@ -5422,8 +5422,8 @@
   "production": {
     "mode": "production",
     "sample_count": 200,
-    "total_eval_time_s": 0.2962757999775931,
-    "avg_latency_ms": 1.407671506749466,
+    "total_eval_time_s": 0.5061658000340685,
+    "avg_latency_ms": 2.4221339949872345,
     "intent_metrics": {
       "intent_accuracy": 0.68,
       "intent_macro_precision": 0.7872052641873614,
