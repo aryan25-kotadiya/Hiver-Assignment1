@@ -1,4 +1,12 @@
-﻿# Hiver SDE Intern — AI Customer Support Agent
+﻿## 0.How to run this program
+
+To run this project, first clone the GitHub repository to your local machine and open the project folder in VS Code or any preferred code editor. Make sure Python is installed, then create and activate a virtual environment and install all required dependencies using the commands provided in the `README.md` file. After completing the environment setup, follow the dataset setup instructions and configure any required environment variables or API keys. The complete project execution flow, including the commands for data preparation, running the AI support agent, evaluation, and reproducing the results, is documented step-by-step in `README.md`. The `redmi1.md` file contains the original assignment requirements and explains what tasks the project is designed to perform. Therefore, `README.md` should be followed for running the code, while `redmi1.md` can be referred to for understanding the assignment requirements and expected deliverables.
+
+
+--- 
+
+
+# Hiver SDE Intern — AI Customer Support Agent
 
 An end-to-end, production-grade AI Customer Support Agent built for **@AppleSupport** using real Twitter customer support conversations from Kaggle (`thoughtvector/customer-support-on-twitter`). The system classifies incoming inquiries into 7 operational domain intents, retrieves historically validated brand resolutions, synthesizes grounded and empathetic public replies (<280 characters), and executes policy-driven triage decisions to safely auto-handle or escalate inquiries with transparent stated reasons.
 
